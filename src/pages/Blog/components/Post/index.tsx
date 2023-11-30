@@ -1,16 +1,19 @@
+import { IPost } from "../..";
 import { ContainerBlogPost } from "./styles";
 
+interface PostProps {
+  post: IPost;
+}
 
-export function BlogPost() {
+export function BlogPost({ post }: PostProps) {
   return (
-    <ContainerBlogPost to="/post/1" >
+    <ContainerBlogPost to={`/post/${post.number}`} >
       <div>
-        <strong>JavaScript data types and data structure</strong>
-        <span> Há 1 dia</span>
+        <strong>{ post.title }</strong>
+        <span>{ post.created_at}</span>
       </div>
       <p>
-        Programming languages all have built-in data structures, but these often differ from one language to another.
-        These can be used to build other data structures. Wherever possible, comparisons with other languages are drawn in...
+       {post.body}
       </p>
     </ContainerBlogPost>
   )

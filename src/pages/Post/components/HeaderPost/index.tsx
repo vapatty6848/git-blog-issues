@@ -4,43 +4,62 @@ import { ContainerHeaderPost } from "./styles";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { faCalendar, faChevronLeft, faComment } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import { IPost } from "../../../Blog";
+import { Spinner } from "../../../../components/Spinner";
+import { relativeDateFormatter } from "../../../../utils/formatter";
 
+interface PostHeaderProps {
+  postData: IPost;
+  isLoading: boolean;
+}
 
-export function HeaderPost() {
+export function HeaderPost({ postData, isLoading }: PostHeaderProps) {
   const navigate = useNavigate();
 
   function goBack() {
     navigate(-1);
   }
 
+  const formattedDate = relativeDateFormatter(postData?.created_at);
+
   return (
     <ContainerHeaderPost>
-      <header>
-        <ComponentLink
-          as="button"
-          icon={<FontAwesomeIcon icon={faChevronLeft} />}
-          text="Back"
-         onClick={goBack}
-          variant="iconLeft"
-        />
-        <ComponentLink text="Ver no GitHub"  href="#" target="_blank"/>
-      </header>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <>
+          <header>
+              <ComponentLink
+              as="button"
+              onClick={goBack}
+              icon={<FontAwesomeIcon icon={faChevronLeft} />}
+              text="Return"
+              variant="iconLeft"
+            />
+            <ComponentLink
+              text="Ver no Github"
+              href={postData.html_url}
+              target="_blank"
+            />
+          </header>
 
-      <h1>JavaScript data types and data structures</h1>
-      <ul>
-        <li>
-          <FontAwesomeIcon icon={faGithub} />
-           cameronwll
-        </li>
-        <li>
-          <FontAwesomeIcon icon={faCalendar} />
-            Há 1 dia
-        </li>
-        <li>
-          <FontAwesomeIcon icon={faComment} />
-          5 comentários
-        </li>
-      </ul>
+          <h1>{postData.title}</h1>
+          <ul>
+            <li>
+              <FontAwesomeIcon icon={faGithub} />
+              {postData.user.login}
+            </li>
+            <li>
+              <FontAwesomeIcon icon={faCalendar} />
+              {formattedDate}
+            </li>
+            <li>
+              <FontAwesomeIcon icon={faComment} />
+              {postData.comments} comment
+            </li>
+          </ul>
+        </>
+      )}
     </ContainerHeaderPost>
   )
 }
